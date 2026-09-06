@@ -10,7 +10,14 @@ recolours the whole page.
 | `index.html` | The entire site. No build step, no dependencies — the bottle photos and the wordmark are embedded in the file itself. |
 | `og-image.jpg` | Social preview card, used when the link is shared. |
 
-## Putting it live (GitHub Pages)
+## Where it's live
+
+- **https://ynot-body-mist.vercel.app** — primary (Vercel, auto-deploys on every push to `main`)
+- **https://amanchhabra-ux.github.io/ynot-body-mist/** — mirror (GitHub Pages, same branch)
+
+Push to `main` and both update. Vercel takes a few seconds; Pages takes about a minute.
+
+## Original GitHub Pages setup
 
 1. Repo → **Settings** → **Pages**
 2. Source: **Deploy from a branch** → branch `main`, folder `/ (root)` → **Save**
