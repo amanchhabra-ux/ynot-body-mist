@@ -204,6 +204,14 @@ h2 .lit{color:var(--a1)}
 .panel .pbody .when{font-family:var(--hand);font-size:19px;color:var(--c);margin-top:6px}
 .panel .num{position:absolute;right:12px;top:10px;font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.1em}
 
+/* girl / boy tag */
+.gtag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  padding:4px 10px;border-radius:999px;line-height:1.4;white-space:nowrap;
+  color:var(--c,var(--a2));border:1px solid color-mix(in srgb,var(--c,var(--a2)) 55%,transparent);
+  background:color-mix(in srgb,var(--c,var(--a2)) 14%,transparent)}
+.panel .pbody .gtag{margin-bottom:7px}
+.readout .hero-tag{--c:var(--a2);margin-right:4px;transition:color .5s,border-color .5s,background .5s}
+
 /* ---------- specs ---------- */
 .specs{padding-top:80px;padding-bottom:20px}
 .badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:26px}
@@ -440,13 +448,13 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
 <script>
 (function(){
   var VIBES = [
-    {id:'black_bloom', name:'Black Bloom', notes:'Floral. Elegant. Unforgettable.', a1:'#FF2D87', a2:'#FF9EC7', ink:'#12040D',
+    {id:'black_bloom', name:'Black Bloom', tag:'For girls',  notes:'Floral. Elegant. Unforgettable.', a1:'#FF2D87', a2:'#FF9EC7', ink:'#12040D',
      when:'for entrances you want remembered', line:'Petals with a spine. Soft on the wrist, loud in the room.'},
-    {id:'legacy', name:'Legacy', notes:'Fresh. Bold. Fearless.', a1:'#00E58F', a2:'#C6FF4F', ink:'#03130E',
+    {id:'legacy', name:'Legacy', tag:'For boys', notes:'Fresh. Bold. Fearless.', a1:'#00E58F', a2:'#C6FF4F', ink:'#03130E',
      when:'for the day you stop asking permission', line:'Cold, green and wide awake. The one that says go first.'},
-    {id:'dark_rogue', name:'Dark Rogue', notes:'Woody. Mysterious. Addictive.', a1:'#3D7BFF', a2:'#45E9FF', ink:'#040A1C',
+    {id:'dark_rogue', name:'Dark Rogue', tag:'For boys', notes:'Woody. Mysterious. Addictive.', a1:'#3D7BFF', a2:'#45E9FF', ink:'#040A1C',
      when:'for after dark, obviously', line:'Deep and low. Own the night, no apologies.'},
-    {id:'amour_belle', name:'Amour Belle', notes:'Romantic. Dreamy. Charming.', a1:'#C77DFF', a2:'#FF86C8', ink:'#0F0420',
+    {id:'amour_belle', name:'Amour Belle', tag:'For girls', notes:'Romantic. Dreamy. Charming.', a1:'#C77DFF', a2:'#FF86C8', ink:'#0F0420',
      when:'for the ones you keep thinking about', line:'Soft focus, slow motion, entirely on purpose.'}
   ];
   var BADGES = [
@@ -495,7 +503,8 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     p.innerHTML =
       '<span class="plabel">'+v.name+'</span>'+
       '<img class="pshot" src="'+document.getElementById('img-'+v.id).src+'" alt="">'+
-      '<div class="pbody"><h3>'+v.name+'</h3><p>'+v.notes+'</p><p>'+v.line+'</p>'+
+      '<div class="pbody"><span class="gtag">'+v.tag+'</span>'+
+      '<h3>'+v.name+'</h3><p>'+v.notes+'</p><p>'+v.line+'</p>'+
       '<div class="when">'+v.when+'</div></div>';
     p.addEventListener('click', function(){ setVibe(i, false); });
     p.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); setVibe(i,false);} });
@@ -542,7 +551,8 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     Array.prototype.forEach.call(pickmini.querySelectorAll('.mini2'), function(c,j){ c.setAttribute('aria-pressed', j===i?'true':'false'); });
     Array.prototype.forEach.call(panels.children, function(c,j){ c.classList.toggle('act', j===i); });
     scramble(ghost, v.name);
-    readout.innerHTML = '<b>'+v.notes+'</b><span class="rtail"> &nbsp;&bull;&nbsp; 100 ml &nbsp;&bull;&nbsp; &#8377;599</span>';
+    readout.innerHTML = '<span class="gtag hero-tag">'+v.tag+'</span><b>'+v.notes+'</b>'+
+      '<span class="rtail"> &nbsp;&bull;&nbsp; 100 ml &nbsp;&bull;&nbsp; &#8377;599</span>';
     if(typeof refreshOrder === 'function') refreshOrder();
     if(burst!==false) spray();
   }
