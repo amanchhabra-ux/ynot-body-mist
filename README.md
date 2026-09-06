@@ -12,7 +12,8 @@ recolours the whole page.
 
 ## Where it's live
 
-- **https://ynot-body-mist.vercel.app** — primary (Vercel, auto-deploys on every push to `main`)
+- **https://www.getynot.in** — primary (Vercel, auto-deploys on every push to `main`; `getynot.in` redirects here)
+- https://ynot-body-mist.vercel.app — same deployment, Vercel's own URL
 - **https://amanchhabra-ux.github.io/ynot-body-mist/** — mirror (GitHub Pages, same branch)
 
 Push to `main` and both update. Vercel takes a few seconds; Pages takes about a minute.
