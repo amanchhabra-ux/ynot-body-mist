@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gauri Chhabra — the founder of Ynot</title>
-<meta name="description" content="Gauri Chhabra is the founder of Ynot Mist Spray. A Class 9 student, national-level skateboarder and lifelong builder — this is how Ynot went from a question to four bottles.">
+<meta name="description" content="Gauri Chhabra is the founder of Ynot Mist Spray. A Class 9 student at Gyan Bharati School, Saket, national-level skateboarder and lifelong builder — selected through the White Canvas India Young CEO Program to build Ynot for real. This is how a question became four bottles.">
 <meta name="theme-color" content="#0B0410">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%97%3C/text%3E%3C/svg%3E">
 <link rel="canonical" href="https://www.getynot.in/founder/">
@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="Ynot Mist Spray">
 <meta property="og:url" content="https://www.getynot.in/founder/">
 <meta property="og:title" content="Gauri Chhabra — the founder of Ynot">
-<meta property="og:description" content="A Class 9 student, national-level skateboarder and lifelong builder. This is how Ynot went from a question to four bottles.">
+<meta property="og:description" content="A Class 9 student, national-level skateboarder and lifelong builder — backed by Gyan Bharati School, Saket and the White Canvas India Young CEO Program. This is how Ynot went from a question to four bottles.">
 <meta property="og:image" content="https://www.getynot.in/founder/poster.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.getynot.in/founder/poster.jpg">
@@ -88,13 +88,13 @@ h1 em{font-style:normal;color:var(--a1)}
 .vidcap b{color:var(--a2);font-weight:500}
 
 /* stats */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;margin-top:46px;
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:0;margin-top:46px;
   border:var(--edge);border-radius:18px;overflow:hidden}
 .stats div{padding:20px 22px;border-right:var(--edge);
   font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
 .stats div:last-child{border-right:0}
-.stats strong{display:block;margin-top:7px;font-family:var(--disp);font-weight:800;font-size:clamp(17px,2vw,23px);
-  letter-spacing:-.02em;color:var(--chalk);text-transform:none}
+.stats strong{display:block;margin-top:7px;font-family:var(--disp);font-weight:800;font-size:clamp(16px,1.7vw,20px);
+  letter-spacing:-.02em;color:var(--chalk);text-transform:none;text-wrap:balance}
 
 /* story */
 .story{padding-top:96px}
@@ -111,6 +111,25 @@ h2 .lit{color:var(--a1)}
   margin:0 0 10px;text-transform:uppercase}
 .step p{margin:0;max-width:62ch;color:#E4D2E4}
 .step p+p{margin-top:9px}
+
+/* backers */
+.backing{padding-top:96px}
+.backing .lede b{color:var(--chalk);font-weight:600}
+.backers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px}
+.backer{position:relative;border:var(--edge);border-radius:20px;padding:30px;background:rgba(255,243,250,.04);
+  display:flex;flex-direction:column;transition:transform .3s,border-color .3s,background .3s}
+.backer:hover{transform:translateY(-4px);border-color:var(--c);background:rgba(255,243,250,.07)}
+.backer .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--c)}
+.backer h3{font-family:var(--disp);font-weight:800;font-size:clamp(21px,2.6vw,30px);letter-spacing:-.025em;
+  margin:12px 0 4px;text-transform:uppercase;text-wrap:balance}
+.backer .where{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0 0 13px}
+.backer p{margin:0;color:#E4D2E4;font-size:15px}
+.backer p+p{margin-top:9px}
+.backer .out{margin-top:auto;padding-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--c);text-decoration:none;display:inline-flex;gap:8px;align-items:center;align-self:flex-start}
+.backer .out i{font-style:normal;transition:transform .2s;display:inline-block}
+.backer .out:hover i{transform:translateX(4px)}
+.thanks{margin-top:24px;font-family:var(--hand);font-size:clamp(20px,2.4vw,27px);color:var(--a2);transform:rotate(-.8deg)}
 
 /* beyond */
 .beyond{padding-top:96px}
@@ -148,8 +167,8 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:64px;paddin
   .hero{grid-template-columns:1fr;gap:32px;padding-top:14px}
   .vidcard{max-width:380px;margin:0 auto}
   .vidcap{text-align:center}
-  .cards{grid-template-columns:1fr}
-  .story,.beyond,.closer{padding-top:66px}
+  .cards,.backers{grid-template-columns:1fr}
+  .story,.beyond,.backing,.closer{padding-top:66px}
 }
 @media (max-width:560px){
   .wrap{padding-left:18px;padding-right:18px}
@@ -182,7 +201,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:64px;paddin
   <div>
     <p class="eyebrow">The founder</p>
     <h1>Gauri <em>Chhabra</em></h1>
-    <p class="standfirst">She is in <b>Class 9 at Gyan Bharati School</b>. She skates for her state and country, she builds things for the love of it, and somewhere between the two she decided a mist spray brand should exist. <b>Ynot is hers</b> — the name, the four scents, the reason any of this happened.</p>
+    <p class="standfirst">She is in <b>Class 9 at Gyan Bharati School, Saket</b>. She skates for her state and country, she builds things for the love of it, and somewhere between the two she decided a mist spray brand should exist. She pitched it into the <b>White Canvas India Young CEO Program</b>, it was picked to be built, and <b>Ynot is hers</b> — the name, the four scents, the reason any of this happened.</p>
     <p class="hand">Most people ask why. She asked why not.</p>
   </div>
   <div>
@@ -198,9 +217,10 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:64px;paddin
 
 <section class="wrap">
   <div class="stats">
-    <div>School<strong>Class 9, Gyan Bharati</strong></div>
-    <div>On the board<strong>National level</strong></div>
-    <div>Podiums<strong>State, national &amp; open</strong></div>
+    <div>School &middot; Class 9<strong>Gyan Bharati</strong></div>
+    <div>Programme<strong>Young CEO</strong></div>
+    <div>Skateboarding<strong>National level</strong></div>
+    <div>Podiums<strong>State &amp; national</strong></div>
     <div>Built<strong>Ynot &mdash; 4 scents</strong></div>
   </div>
 </section>
@@ -231,6 +251,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:64px;paddin
       <div class="stepno">03 <span>Launch</span></div>
       <div>
         <h3>Out of the notebook</h3>
+        <p>This is the step where most school ideas quietly stop. Ynot didn’t, because it was <b>chosen</b>. She took it into the Young CEO Program at school and pitched it, and Ynot came out of that as one of the ideas selected to actually be made. Selection is the difference between a notebook page and a purchase order.</p>
         <p>Packaging designed, bottles filled, brand built &mdash; and then the part most ideas never reach: putting it in front of people. The site you&rsquo;re on is the launch, and the pre-order list is open.</p>
       </div>
     </div>
@@ -243,6 +264,33 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:64px;paddin
       </div>
     </div>
   </div>
+</section>
+
+<section class="backing wrap">
+  <p class="eyebrow">The support system</p>
+  <h2>She had the idea.<br>Two places <span class="lit">said yes</span>.</h2>
+  <p class="lede">A fourteen-year-old cannot open a supplier account, and a good idea on its own does not become a product. What Gauri needed was somewhere to pitch it, and someone to say this one is real, go and build it. <b>She got both.</b></p>
+
+  <div class="backers">
+    <div class="backer" style="--c:#F3C24A">
+      <div class="kicker">School</div>
+      <h3>Gyan Bharati School</h3>
+      <p class="where">Saket, New Delhi</p>
+      <p>Her school made room for it. Running an entrepreneurship programme alongside Class 9 means treating a student&rsquo;s business idea as work worth timetabling, mentoring and standing behind &mdash; not as a distraction from the syllabus.</p>
+      <p>Ynot exists partly because the place she spends her days decided that building something real counted.</p>
+      <a class="out" href="https://www.gyanbharatischool.in" target="_blank" rel="noopener">gyanbharatischool.in <i>&rarr;</i></a>
+    </div>
+    <div class="backer" style="--c:#45E9FF">
+      <div class="kicker">The programme</div>
+      <h3>White Canvas India</h3>
+      <p class="where">Young CEO Program &middot; Grades 6&ndash;12</p>
+      <p>An MBA-styled entrepreneurship programme for school students, recognised by Startup India and now running in schools across the country. Students do the actual work &mdash; need analysis, business plan, vendor negotiation, marketing &mdash; and the ideas that hold up get taken through to launch.</p>
+      <p>Gauri pitched Ynot into it. It was selected, and that is what turned four scent ideas into four filled bottles.</p>
+      <a class="out" href="https://www.whitecanvasindia.com" target="_blank" rel="noopener">whitecanvasindia.com <i>&rarr;</i></a>
+    </div>
+  </div>
+
+  <p class="thanks">Thank you, both. She would still be sketching bottles otherwise.</p>
 </section>
 
 <section class="beyond wrap">
