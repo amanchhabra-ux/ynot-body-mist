@@ -243,10 +243,7 @@ h2 .lit{color:var(--a1)}
 .drop{padding-top:86px;padding-bottom:40px}
 .dropbox{border:var(--edge);border-radius:26px;padding:clamp(26px,4vw,52px);
   background:linear-gradient(160deg,rgba(255,243,250,.08),rgba(11,4,16,.6));backdrop-filter:blur(8px)}
-.pickmini{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px;align-items:center}
 .lab{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
-.mini2{background:transparent;border:var(--edge);color:var(--mute);border-radius:999px;padding:7px 14px;font-size:12px;cursor:pointer;transition:all .25s}
-.mini2[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#0B0410;font-weight:600}
 .orderrow{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:22px}
 .qty{display:flex;align-items:center;gap:10px;border:var(--edge);border-radius:999px;padding:8px 10px 8px 18px;background:rgba(11,4,16,.45)}
 .qty button{width:32px;height:32px;border-radius:50%;border:var(--edge);background:transparent;color:var(--chalk);
@@ -261,6 +258,25 @@ h2 .lit{color:var(--a1)}
 .go:hover{transform:translateY(-2px) rotate(-1deg);filter:brightness(1.12)}
 .go .arw{transition:transform .2s}
 .go:hover .arw{transform:translateX(4px)}
+.cart{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.crow{display:grid;grid-template-columns:46px 1fr auto auto;gap:14px;align-items:center;
+  border:var(--edge);border-radius:16px;padding:9px 14px 9px 8px;background:rgba(11,4,16,.42);
+  transition:border-color .3s,background .3s}
+.crow.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 13%,rgba(11,4,16,.42))}
+.crow>img{height:54px;width:auto;max-width:none;justify-self:center;
+  filter:drop-shadow(0 5px 12px rgba(0,0,0,.55));transition:transform .3s}
+.crow.on>img{transform:scale(1.06)}
+.cmeta{min-width:0}
+.cname{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:-.005em;line-height:1.25}
+.ctag{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--c);margin-top:3px}
+.cprice{font-family:var(--mono);font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.step{display:flex;align-items:center;gap:9px}
+.step button{width:30px;height:30px;border-radius:50%;border:var(--edge);background:transparent;color:var(--chalk);
+  font-size:16px;line-height:1;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.step button:hover{background:var(--c);border-color:var(--c);color:#0B0410}
+.step output{min-width:20px;text-align:center;font-family:var(--disp);font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
+.crow:not(.on) .step output{color:var(--mute)}
+.cartcount{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:3px}
 .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
 .fld{display:flex;flex-direction:column;gap:7px}
 .fld.wide{grid-column:1 / -1}
@@ -341,6 +357,9 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   .specline div{min-width:50%;flex:1 0 50%}
   .orderrow{gap:12px}
   .fields{grid-template-columns:1fr;gap:12px}
+  .crow{grid-template-columns:40px 1fr auto;gap:11px;padding:9px 12px 9px 6px}
+  .crow>img{height:48px}
+  .cprice{display:none}
   .orderrow .go{width:100%;justify-content:center}
   .qty{flex:1 1 auto;justify-content:space-between}
   .total{padding:0}
@@ -429,9 +448,9 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   <div class="dropbox" id="dropbox">
     <p class="eyebrow">Pre-order</p>
     <h2>Be first <span class="lit">to spray</span>.</h2>
-    <p class="lede dintro">Not in shops yet &mdash; reserve yours now. Pick a vibe, add where it should reach you, and your order opens in WhatsApp already written. You just hit send.</p>
+    <p class="lede dintro">Not in shops yet &mdash; reserve yours now. Add as many bottles as you like, tell us where they should reach you, and the whole order opens in WhatsApp already written. You just hit send.</p>
 
-    <div class="pickmini" id="pickmini"><span class="lab">My vibe</span></div>
+    <div class="cart" id="cart"></div>
 
     <form class="orderform" id="orderform" novalidate>
       <div class="fields">
@@ -448,13 +467,8 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
       </div>
 
       <div class="orderrow">
-        <div class="qty">
-          <span class="lab">Bottles</span>
-          <button type="button" id="qminus" aria-label="One fewer bottle">&minus;</button>
-          <output id="qval" aria-live="polite">1</output>
-          <button type="button" id="qplus" aria-label="One more bottle">+</button>
-        </div>
-        <div class="total"><span class="lab">MRP total</span><strong id="total">&#8377;599</strong></div>
+        <div class="total"><span class="lab">Cart total</span><strong id="total">&#8377;0</strong>
+          <span class="cartcount" id="cartcount" aria-live="polite">Nothing added yet</span></div>
         <button class="go wa" id="preorder" type="submit">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.4-.6L3 21l1.8-5.1A8.2 8.2 0 0 1 3.6 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8.4 8.4Z"/></svg>
           Send on WhatsApp</button>
@@ -516,7 +530,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   var active = 0;
 
   /* ---- build vibe chips ---- */
-  var picker = $('#picker'), pickmini = $('#pickmini');
+  var picker = $('#picker');
   VIBES.forEach(function(v,i){
     var b = document.createElement('button');
     b.className='chip'; b.type='button'; b.textContent=v.name;
@@ -524,12 +538,6 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     b.setAttribute('aria-pressed', i===0?'true':'false');
     b.addEventListener('click', function(){ setVibe(i, true); });
     picker.appendChild(b);
-    var m = document.createElement('button');
-    m.className='mini2'; m.type='button'; m.textContent=v.name;
-    m.style.setProperty('--c', v.a1);
-    m.setAttribute('aria-pressed', i===0?'true':'false');
-    m.addEventListener('click', function(){ setVibe(i, false); });
-    pickmini.appendChild(m);
   });
 
   /* ---- build lineup panels ---- */
@@ -587,7 +595,6 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
       document.getElementById('img-'+o.id).classList.toggle('on', j===i);
     });
     Array.prototype.forEach.call(picker.children, function(c,j){ c.setAttribute('aria-pressed', j===i?'true':'false'); });
-    Array.prototype.forEach.call(pickmini.querySelectorAll('.mini2'), function(c,j){ c.setAttribute('aria-pressed', j===i?'true':'false'); });
     Array.prototype.forEach.call(panels.children, function(c,j){ c.classList.toggle('act', j===i); });
     scramble(ghost, v.name);
     readout.innerHTML = '<span class="gtag hero-tag">'+v.tag+'</span><b>'+v.notes+'</b>'+
@@ -679,24 +686,54 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     d.style.color = i%2 ? 'var(--a2)' : 'var(--a1)';
   });
 
-  /* ---- pre-order: the order is written for you and opens in WhatsApp ---- */
+  /* ---- pre-order: a cart of scents, delivered on WhatsApp ---- */
   var WA = '918700011719';                       // brand WhatsApp, international format, no +
-  var TO = 'gaurichhabra272012@gmail.com', PRICE = 599, qty = 1;
-  var qval=$('#qval'), total=$('#total'), sentnote=$('#sentnote'), err=$('#formerr');
+  var TO = 'gaurichhabra272012@gmail.com', PRICE = 599;
+  var CART = VIBES.map(function(){ return 0; });
+  var cartEl=$('#cart'), total=$('#total'), countEl=$('#cartcount'), sentnote=$('#sentnote'), err=$('#formerr');
 
-  function refreshOrder(){
-    qval.textContent = qty;
-    total.innerHTML = '&#8377;' + (PRICE*qty).toLocaleString('en-IN');
+  VIBES.forEach(function(v,i){
+    var row=document.createElement('div');
+    row.className='crow'; row.style.setProperty('--c', v.a1);
+    row.innerHTML =
+      '<img src="'+document.getElementById('img-'+v.id).src+'" alt="">'+
+      '<div class="cmeta"><div class="cname">'+v.name+'</div><div class="ctag">'+v.tag+'</div></div>'+
+      '<div class="cprice">&#8377;'+PRICE+'</div>'+
+      '<div class="step">'+
+        '<button type="button" class="minus" aria-label="One fewer '+v.name+'">&minus;</button>'+
+        '<output aria-live="polite">0</output>'+
+        '<button type="button" class="plus" aria-label="One more '+v.name+'">+</button>'+
+      '</div>';
+    row.querySelector('.plus').addEventListener('click', function(){ bump(i, 1); });
+    row.querySelector('.minus').addEventListener('click', function(){ bump(i,-1); });
+    cartEl.appendChild(row);
+  });
+
+  function bump(i, d){
+    CART[i]=Math.max(0, Math.min(9, CART[i]+d));
+    if(d>0 && i!==active) setVibe(i, false);        // the page follows what you're adding
+    drawCart();
   }
-  $('#qminus').addEventListener('click', function(){ qty=Math.max(1,qty-1); refreshOrder(); });
-  $('#qplus').addEventListener('click', function(){ qty=Math.min(6,qty+1); refreshOrder(); });
+  function cartCount(){ return CART.reduce(function(a,b){return a+b;},0); }
+  function drawCart(){
+    Array.prototype.forEach.call(cartEl.children, function(row,i){
+      row.classList.toggle('on', CART[i]>0);
+      row.querySelector('output').textContent = CART[i];
+    });
+    var n=cartCount();
+    total.innerHTML = '&#8377;' + (PRICE*n).toLocaleString('en-IN');
+    countEl.textContent = n ? (n + (n>1?' bottles':' bottle')) : 'Nothing added yet';
+  }
+  function refreshOrder(){ drawCart(); }               // called when the vibe changes
 
   function orderText(o){
-    var v = VIBES[active];
+    var lines = VIBES.map(function(v,i){
+      return CART[i] ? '\u2022 ' + v.name + ' \u00D7 ' + CART[i] + ' \u2014 \u20B9' + (PRICE*CART[i]).toLocaleString('en-IN') : null;
+    }).filter(Boolean).join('\n');
+    var n=cartCount();
     return 'Hi Ynot! I\u2019d like to pre-order.\n\n'
-      + 'Vibe: ' + v.name + ' (' + v.notes + ')\n'
-      + 'Bottles: ' + qty + '\n'
-      + 'MRP total: \u20B9' + (PRICE*qty).toLocaleString('en-IN') + '\n\n'
+      + lines + '\n'
+      + 'Total: ' + n + (n>1?' bottles':' bottle') + ' \u2014 \u20B9' + (PRICE*n).toLocaleString('en-IN') + '\n\n'
       + 'Name: ' + o.name + '\n'
       + 'Phone: ' + o.phone + '\n'
       + 'Address: ' + o.addr + '\n'
@@ -710,8 +747,13 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     var nEl=$('#f-name'), pEl=$('#f-phone'), aEl=$('#f-addr'), cEl=$('#f-city'), zEl=$('#f-pin');
     var o = { name:nEl.value.trim(), phone:pEl.value.trim(), addr:aEl.value.trim(),
               city:cEl.value.trim(), pin:zEl.value.trim() };
-    var digits = o.phone.replace(/\D/g,''), pinOk = /^\d{6}$/.test(o.pin);
-    var bad = [], first = null;
+    var digits=o.phone.replace(/\D/g,''), pinOk=/^\d{6}$/.test(o.pin);
+    if(!cartCount()){
+      err.textContent = 'Add at least one bottle to your cart.';
+      cartEl.scrollIntoView({block:'center'});
+      return;
+    }
+    var bad=[], first=null;
     function need(el, ok, label){ flag(el,!ok); if(!ok){ bad.push(label); if(!first) first=el; } }
     need(nEl, !!o.name, 'your name');
     need(pEl, digits.length>=10 && digits.length<=13, 'a valid WhatsApp number');
@@ -719,18 +761,19 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     need(cEl, !!o.city, 'your city');
     need(zEl, pinOk, 'a 6-digit pincode');
     if(bad.length){
-      err.textContent = 'Just need ' + bad.join(', ') + '.';
+      err.textContent='Just need ' + bad.join(', ') + '.';
       if(first) first.focus();
       return;
     }
     err.textContent='';
-    var msg = orderText(o);
+    var msg=orderText(o);
     var url = /^\d{10,15}$/.test(WA)
       ? 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg)
-      : 'mailto:' + TO + '?subject=' + encodeURIComponent('Ynot pre-order \u2014 ' + VIBES[active].name + ' x' + qty)
+      : 'mailto:' + TO + '?subject=' + encodeURIComponent('Ynot pre-order \u2014 ' + cartCount() + ' bottles')
         + '&body=' + encodeURIComponent(msg);
     window.open(url,'_blank','noopener');
-    $('#doneline').innerHTML = 'Your pre-order for <b>' + qty + ' &times; ' + VIBES[active].name +
+    var n=cartCount();
+    $('#doneline').innerHTML = 'Your pre-order for <b>' + n + (n>1?' bottles':' bottle') +
       '</b> is written and waiting &mdash; just hit send. We&rsquo;ll reply on <b>' +
       o.phone.replace(/[<>&]/g,'') + '</b> to confirm.';
     sentnote.classList.add('show');
@@ -742,6 +785,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     try{ navigator.clipboard.writeText(TO).then(function(){done(true);},function(){done(false);}); }
     catch(e){ done(false); }
   });
+  drawCart();
 
   setVibe(0, false);
 })();
