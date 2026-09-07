@@ -261,6 +261,20 @@ h2 .lit{color:var(--a1)}
 .go:hover{transform:translateY(-2px) rotate(-1deg);filter:brightness(1.12)}
 .go .arw{transition:transform .2s}
 .go:hover .arw{transform:translateX(4px)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.fld{display:flex;flex-direction:column;gap:7px}
+.fld>span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.fld>span i{font-style:normal;color:#6E5A76;letter-spacing:.1em}
+.fld input{width:100%;background:rgba(11,4,16,.5);border:var(--edge);border-radius:14px;
+  padding:14px 16px;font-size:15px;color:var(--chalk);transition:border-color .25s,box-shadow .25s,background .25s}
+.fld input::placeholder{color:#715D79}
+.fld input:focus{outline:none;border-color:var(--a1);background:rgba(11,4,16,.7);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--a1) 20%,transparent)}
+.fld input.bad{border-color:#FF5C7A;box-shadow:0 0 0 4px rgba(255,92,122,.16)}
+.go.wa{background:#25D366;color:#062611}
+.go.wa:hover{filter:brightness(1.08)}
+.go.wa svg{flex:0 0 auto}
+.err{min-height:18px;margin:12px 0 0;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:#FF8FA3}
 .fineprint{margin-top:16px;font-family:var(--mono);font-size:11px;color:#7E6784;letter-spacing:.06em;line-height:1.9}
 .fineprint a{color:var(--a2);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--a2) 45%,transparent)}
 .copy{background:transparent;border:var(--edge);border-radius:999px;color:var(--mute);
@@ -325,6 +339,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   .panel .pbody h3{font-size:19px}
   .specline div{min-width:50%;flex:1 0 50%}
   .orderrow{gap:12px}
+  .fields{grid-template-columns:1fr;gap:12px}
   .orderrow .go{width:100%;justify-content:center}
   .qty{flex:1 1 auto;justify-content:space-between}
   .total{padding:0}
@@ -413,27 +428,43 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   <div class="dropbox" id="dropbox">
     <p class="eyebrow">Pre-order</p>
     <h2>Be first <span class="lit">to spray</span>.</h2>
-    <p class="lede dintro">Not in shops yet &mdash; reserve yours now. Pick a vibe, tap the button, and your mail app opens with the pre&#8209;order already written. You just hit send.</p>
+    <p class="lede dintro">Not in shops yet &mdash; reserve yours now. Pick a vibe, fill in three boxes, and your order opens in WhatsApp already written. You just hit send.</p>
 
     <div class="pickmini" id="pickmini"><span class="lab">My vibe</span></div>
 
-    <div class="orderrow">
-      <div class="qty">
-        <span class="lab">Bottles</span>
-        <button type="button" id="qminus" aria-label="One fewer bottle">&minus;</button>
-        <output id="qval" aria-live="polite">1</output>
-        <button type="button" id="qplus" aria-label="One more bottle">+</button>
+    <form class="orderform" id="orderform" novalidate>
+      <div class="fields">
+        <label class="fld"><span>Name</span>
+          <input id="f-name" type="text" autocomplete="name" placeholder="Your name" required></label>
+        <label class="fld"><span>WhatsApp number</span>
+          <input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile" required></label>
+        <label class="fld"><span>City</span>
+          <input id="f-city" type="text" autocomplete="address-level2" placeholder="Where should it reach you?" required></label>
+        <label class="fld"><span>Note <i>optional</i></span>
+          <input id="f-note" type="text" maxlength="120" placeholder="Anything we should know?"></label>
       </div>
-      <div class="total"><span class="lab">MRP total</span><strong id="total">&#8377;599</strong></div>
-      <a class="go" id="preorder" href="#" target="_blank" rel="noopener">Reserve my bottle <span class="arw">&rarr;</span></a>
-    </div>
+
+      <div class="orderrow">
+        <div class="qty">
+          <span class="lab">Bottles</span>
+          <button type="button" id="qminus" aria-label="One fewer bottle">&minus;</button>
+          <output id="qval" aria-live="polite">1</output>
+          <button type="button" id="qplus" aria-label="One more bottle">+</button>
+        </div>
+        <div class="total"><span class="lab">MRP total</span><strong id="total">&#8377;599</strong></div>
+        <button class="go wa" id="preorder" type="submit">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.4-.6L3 21l1.8-5.1A8.2 8.2 0 0 1 3.6 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8.4 8.4Z"/></svg>
+          Send on WhatsApp</button>
+      </div>
+      <p class="err" id="formerr" role="alert"></p>
+    </form>
 
     <p class="fineprint">Nothing is charged here &mdash; payment is sorted when the drop lands.<br>
-      No mail app? Write to <a href="mailto:gaurichhabra272012@gmail.com">gaurichhabra272012@gmail.com</a>
+      No WhatsApp? Write to <a href="mailto:gaurichhabra272012@gmail.com">gaurichhabra272012@gmail.com</a>
       <button class="copy" id="copyb" type="button">Copy address</button> <span id="copied" aria-live="polite"></span></p>
 
     <div class="sent-note" id="sentnote">
-      <h3>Mail app open?</h3>
+      <h3>WhatsApp open?</h3>
       <p id="doneline"></p>
       <p class="hand">Shake it. Spray it. Slay on it.</p>
     </div>
@@ -645,40 +676,65 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     d.style.color = i%2 ? 'var(--a2)' : 'var(--a1)';
   });
 
-  /* ---- pre-order via the visitor's own mail app ---- */
+  /* ---- pre-order: the order is written for you and opens in WhatsApp ---- */
+  var WA = '918700011719';                       // brand WhatsApp, international format, no +
   var TO = 'gaurichhabra272012@gmail.com', PRICE = 599, qty = 1;
-  var qval = $('#qval'), total = $('#total'), preorder = $('#preorder'), sentnote = $('#sentnote');
+  var qval=$('#qval'), total=$('#total'), sentnote=$('#sentnote'), err=$('#formerr');
+
   function refreshOrder(){
-    var v = VIBES[active];
     qval.textContent = qty;
     total.innerHTML = '&#8377;' + (PRICE*qty).toLocaleString('en-IN');
-    preorder.innerHTML = 'Reserve my ' + (qty>1 ? 'bottles' : 'bottle') + ' <span class="arw">&rarr;</span>';
-    var subject = 'Ynot pre-order \u2014 ' + v.name + ' x' + qty;
-    var body =
-      'Hi Ynot,\n\n' +
-      'I\u2019d like to pre-order Ynot Body Mist.\n\n' +
-      'Vibe: ' + v.name + ' (' + v.notes + ')\n' +
-      'Bottles: ' + qty + '\n' +
-      'MRP total: Rs ' + (PRICE*qty) + '\n\n' +
-      'Name: \n' +
-      'Phone: \n' +
-      'Delivery address: \n\n' +
-      'Sent from the Ynot pre-launch page.';
-    preorder.href = 'mailto:' + TO + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   }
-  $('#qminus').addEventListener('click', function(){ qty = Math.max(1, qty-1); refreshOrder(); });
-  $('#qplus').addEventListener('click', function(){ qty = Math.min(6, qty+1); refreshOrder(); });
-  preorder.addEventListener('click', function(){
+  $('#qminus').addEventListener('click', function(){ qty=Math.max(1,qty-1); refreshOrder(); });
+  $('#qplus').addEventListener('click', function(){ qty=Math.min(6,qty+1); refreshOrder(); });
+
+  function orderText(o){
+    var v = VIBES[active];
+    return 'Hi Ynot! I\u2019d like to pre-order.\n\n'
+      + 'Vibe: ' + v.name + ' (' + v.notes + ')\n'
+      + 'Bottles: ' + qty + '\n'
+      + 'MRP total: \u20B9' + (PRICE*qty).toLocaleString('en-IN') + '\n\n'
+      + 'Name: ' + o.name + '\n'
+      + 'Phone: ' + o.phone + '\n'
+      + 'City: ' + o.city + '\n'
+      + (o.note ? 'Note: ' + o.note + '\n' : '')
+      + '\nSent from getynot.in';
+  }
+  function flag(el,bad){ el.classList.toggle('bad',!!bad); }
+
+  $('#orderform').addEventListener('submit', function(e){
+    e.preventDefault();
+    var nEl=$('#f-name'), pEl=$('#f-phone'), cEl=$('#f-city');
+    var o = { name:nEl.value.trim(), phone:pEl.value.trim(), city:cEl.value.trim(), note:$('#f-note').value.trim() };
+    var digits = o.phone.replace(/\D/g,'');
+    var bad = [];
+    flag(nEl, !o.name);        if(!o.name) bad.push('your name');
+    flag(pEl, digits.length<10 || digits.length>13);
+    if(digits.length<10 || digits.length>13) bad.push('a valid WhatsApp number');
+    flag(cEl, !o.city);        if(!o.city) bad.push('your city');
+    if(bad.length){
+      err.textContent = 'Just need ' + bad.join(', ') + '.';
+      (bad[0]==='your name'?nEl:bad[0]==='your city'?cEl:pEl).focus();
+      return;
+    }
+    err.textContent='';
+    var msg = orderText(o);
+    var url = /^\d{10,15}$/.test(WA)
+      ? 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg)
+      : 'mailto:' + TO + '?subject=' + encodeURIComponent('Ynot pre-order \u2014 ' + VIBES[active].name + ' x' + qty)
+        + '&body=' + encodeURIComponent(msg);
+    window.open(url,'_blank','noopener');
     $('#doneline').innerHTML = 'Your pre-order for <b>' + qty + ' &times; ' + VIBES[active].name +
-      '</b> is written and waiting in your mail app &mdash; add your address and send it. If nothing opened, mail us at <b>' + TO + '</b>.';
+      '</b> is written and waiting &mdash; just hit send. We&rsquo;ll reply on <b>' +
+      o.phone.replace(/[<>&]/g,'') + '</b> to confirm.';
     sentnote.classList.add('show');
     spray(); puff(innerWidth/2, innerHeight*0.6, 46, 5);
   });
+
   $('#copyb').addEventListener('click', function(){
-    var done = function(ok){ $('#copied').textContent = ok ? 'Copied' : 'Select it above to copy'; };
-    try{
-      navigator.clipboard.writeText(TO).then(function(){ done(true); }, function(){ done(false); });
-    }catch(err){ done(false); }
+    var done=function(ok){ $('#copied').textContent = ok ? 'Copied' : 'Select it above to copy'; };
+    try{ navigator.clipboard.writeText(TO).then(function(){done(true);},function(){done(false);}); }
+    catch(e){ done(false); }
   });
 
   setVibe(0, false);
