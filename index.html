@@ -263,6 +263,7 @@ h2 .lit{color:var(--a1)}
 .go:hover .arw{transform:translateX(4px)}
 .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
 .fld{display:flex;flex-direction:column;gap:7px}
+.fld.wide{grid-column:1 / -1}
 .fld>span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
 .fld>span i{font-style:normal;color:#6E5A76;letter-spacing:.1em}
 .fld input{width:100%;background:rgba(11,4,16,.5);border:var(--edge);border-radius:14px;
@@ -428,7 +429,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   <div class="dropbox" id="dropbox">
     <p class="eyebrow">Pre-order</p>
     <h2>Be first <span class="lit">to spray</span>.</h2>
-    <p class="lede dintro">Not in shops yet &mdash; reserve yours now. Pick a vibe, fill in three boxes, and your order opens in WhatsApp already written. You just hit send.</p>
+    <p class="lede dintro">Not in shops yet &mdash; reserve yours now. Pick a vibe, add where it should reach you, and your order opens in WhatsApp already written. You just hit send.</p>
 
     <div class="pickmini" id="pickmini"><span class="lab">My vibe</span></div>
 
@@ -438,10 +439,12 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
           <input id="f-name" type="text" autocomplete="name" placeholder="Your name" required></label>
         <label class="fld"><span>WhatsApp number</span>
           <input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile" required></label>
+        <label class="fld wide"><span>Delivery address</span>
+          <input id="f-addr" type="text" maxlength="160" autocomplete="street-address" placeholder="Flat / house, street, landmark" required></label>
         <label class="fld"><span>City</span>
-          <input id="f-city" type="text" autocomplete="address-level2" placeholder="Where should it reach you?" required></label>
-        <label class="fld"><span>Note <i>optional</i></span>
-          <input id="f-note" type="text" maxlength="120" placeholder="Anything we should know?"></label>
+          <input id="f-city" type="text" autocomplete="address-level2" placeholder="City" required></label>
+        <label class="fld"><span>Pincode</span>
+          <input id="f-pin" type="text" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="6 digits" required></label>
       </div>
 
       <div class="orderrow">
@@ -696,25 +699,28 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
       + 'MRP total: \u20B9' + (PRICE*qty).toLocaleString('en-IN') + '\n\n'
       + 'Name: ' + o.name + '\n'
       + 'Phone: ' + o.phone + '\n'
-      + 'City: ' + o.city + '\n'
-      + (o.note ? 'Note: ' + o.note + '\n' : '')
+      + 'Address: ' + o.addr + '\n'
+      + 'City: ' + o.city + ' \u2014 ' + o.pin + '\n'
       + '\nSent from getynot.in';
   }
   function flag(el,bad){ el.classList.toggle('bad',!!bad); }
 
   $('#orderform').addEventListener('submit', function(e){
     e.preventDefault();
-    var nEl=$('#f-name'), pEl=$('#f-phone'), cEl=$('#f-city');
-    var o = { name:nEl.value.trim(), phone:pEl.value.trim(), city:cEl.value.trim(), note:$('#f-note').value.trim() };
-    var digits = o.phone.replace(/\D/g,'');
-    var bad = [];
-    flag(nEl, !o.name);        if(!o.name) bad.push('your name');
-    flag(pEl, digits.length<10 || digits.length>13);
-    if(digits.length<10 || digits.length>13) bad.push('a valid WhatsApp number');
-    flag(cEl, !o.city);        if(!o.city) bad.push('your city');
+    var nEl=$('#f-name'), pEl=$('#f-phone'), aEl=$('#f-addr'), cEl=$('#f-city'), zEl=$('#f-pin');
+    var o = { name:nEl.value.trim(), phone:pEl.value.trim(), addr:aEl.value.trim(),
+              city:cEl.value.trim(), pin:zEl.value.trim() };
+    var digits = o.phone.replace(/\D/g,''), pinOk = /^\d{6}$/.test(o.pin);
+    var bad = [], first = null;
+    function need(el, ok, label){ flag(el,!ok); if(!ok){ bad.push(label); if(!first) first=el; } }
+    need(nEl, !!o.name, 'your name');
+    need(pEl, digits.length>=10 && digits.length<=13, 'a valid WhatsApp number');
+    need(aEl, o.addr.length>=6, 'your address');
+    need(cEl, !!o.city, 'your city');
+    need(zEl, pinOk, 'a 6-digit pincode');
     if(bad.length){
       err.textContent = 'Just need ' + bad.join(', ') + '.';
-      (bad[0]==='your name'?nEl:bad[0]==='your city'?cEl:pEl).focus();
+      if(first) first.focus();
       return;
     }
     err.textContent='';
