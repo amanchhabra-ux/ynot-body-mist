@@ -1,0 +1,8 @@
+# https://www.getynot.in/
+User-agent: *
+Allow: /
+
+# No crawlable value, and they change on every deploy
+Disallow: /*.mjs$
+
+Sitemap: https://www.getynot.in/sitemap.xml
