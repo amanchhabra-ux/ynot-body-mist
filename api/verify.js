@@ -108,7 +108,10 @@ module.exports = async function handler(req, res){
     'Items   : ' + summary.items + '\n' +
     'Paid    : ' + RS + amt.toLocaleString('en-IN') + '\n\n' +
     'Delivering to\n' + addrBlock + '\n\n' +
-    'We will message you on WhatsApp as soon as it ships.\n' +
+    'WHAT HAPPENS NEXT\n' +
+    'We have received your order and it is in the queue to be packed.\n' +
+    'We will message you on WhatsApp with tracking details the moment it ships,\n' +
+    'and keep you posted until it reaches you.\n\n' +
     'Questions? https://wa.me/' + L.BRAND_WA + '\n\n' +
     'Be you. Own it.\nYnot - getynot.in\n';
 
@@ -124,8 +127,12 @@ module.exports = async function handler(req, res){
     '</table>' +
     '<h3 style="margin:24px 0 6px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#6C6570">Delivering to</h3>' +
     '<p style="margin:0;white-space:pre-line">' + esc(addrBlock) + '</p>' +
-    '<p style="margin:26px 0 0;color:#6C6570">We will message you on WhatsApp the moment it ships. ' +
-    'Anything at all &mdash; <a href="https://wa.me/' + esc(L.BRAND_WA) + '" style="color:#FF2D87">message us here</a>.</p>' +
+    '<h3 style="margin:24px 0 6px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#6C6570">What happens next</h3>' +
+    '<p style="margin:0;color:#6C6570">We have received your order and it is in the queue to be packed. ' +
+    'We will message you on WhatsApp with tracking details the moment it ships, and keep you posted ' +
+    'until it reaches you.</p>' +
+    '<p style="margin:14px 0 0;color:#6C6570">Anything at all &mdash; ' +
+    '<a href="https://wa.me/' + esc(L.BRAND_WA) + '" style="color:#FF2D87">message us here</a>.</p>' +
     '<p style="margin:26px 0 0;font-weight:700">Be you. Own it.</p>' +
     '<p style="margin:2px 0 0;color:#9A93A0;font-size:13px">Ynot &middot; getynot.in</p>' +
     '</div>';
