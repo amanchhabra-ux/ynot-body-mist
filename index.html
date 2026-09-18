@@ -586,6 +586,11 @@ h2 .lit{color:var(--a1)}
 .fld input:focus{outline:none;border-color:var(--a1);background:rgba(11,4,16,.7);
   box-shadow:0 0 0 4px color-mix(in srgb,var(--a1) 20%,transparent)}
 .fld input.bad{border-color:#FF5C7A;box-shadow:0 0 0 4px rgba(255,92,122,.16)}
+.legal{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:center;margin-top:22px;
+  padding-top:20px;border-top:1px solid rgba(255,158,199,.12)}
+.legal a{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:#7E6784;text-decoration:none;transition:color .2s}
+.legal a:hover{color:var(--a2)}
 .fld[hidden]{display:none}
 .go.pay{background:linear-gradient(96deg,var(--a1),var(--a2));color:#14030C}
 .go.pay:hover{filter:brightness(1.07)}
@@ -871,6 +876,10 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     <span class="sp"></span>
     <span>Pre-orders &middot; gaurichhabra272012@gmail.com</span>
   </div>
+  <nav class="legal">
+    <a href="/terms/">Terms</a><a href="/privacy/">Privacy</a><a href="/refunds/">Returns &amp; refunds</a>
+    <a href="/shipping/">Shipping</a><a href="/founder/">The founder</a>
+  </nav>
 </footer>
 
 <script>
