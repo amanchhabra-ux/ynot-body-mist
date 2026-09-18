@@ -1,0 +1,7 @@
+{
+  "name": "ynot-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "getynot.in - static site plus the Razorpay checkout functions",
+  "engines": { "node": "22.x" }
+}

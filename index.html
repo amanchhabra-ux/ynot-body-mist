@@ -586,6 +586,22 @@ h2 .lit{color:var(--a1)}
 .fld input:focus{outline:none;border-color:var(--a1);background:rgba(11,4,16,.7);
   box-shadow:0 0 0 4px color-mix(in srgb,var(--a1) 20%,transparent)}
 .fld input.bad{border-color:#FF5C7A;box-shadow:0 0 0 4px rgba(255,92,122,.16)}
+.fld[hidden]{display:none}
+.go.pay{background:linear-gradient(96deg,var(--a1),var(--a2));color:#14030C}
+.go.pay:hover{filter:brightness(1.07)}
+.go[disabled]{opacity:.62;pointer-events:none;transform:none}
+.go .spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(20,3,12,.3);
+  border-top-color:#14030C;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.paysafe{display:none;align-items:center;gap:9px;margin-top:14px;font-family:var(--mono);
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#8C7793}
+.paysafe.show{display:flex}
+.paysafe svg{flex:0 0 auto;color:var(--a2)}
+.paysafe b{color:#BBA7C2;font-weight:400;letter-spacing:.14em}
+.testbanner{display:none;margin-top:14px;padding:10px 14px;border-radius:12px;
+  background:rgba(255,190,60,.12);border:1px solid rgba(255,190,60,.34);
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:#FFD98A;line-height:1.7}
+.testbanner.show{display:block}
 .go.wa{background:#25D366;color:#062611}
 .go.wa:hover{filter:brightness(1.08)}
 .go.wa svg{flex:0 0 auto}
@@ -777,6 +793,8 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
           <input id="f-name" type="text" autocomplete="name" placeholder="Your name" required></label>
         <label class="fld"><span>WhatsApp number</span>
           <input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile" required></label>
+        <label class="fld wide payonly" id="fld-email" hidden><span>Email <i>&mdash; for your receipt</i></span>
+          <input id="f-email" type="email" autocomplete="email" placeholder="you@example.com"></label>
         <label class="fld wide"><span>Delivery address</span>
           <input id="f-addr" type="text" maxlength="160" autocomplete="street-address" placeholder="Flat / house, street, landmark" required></label>
         <label class="fld"><span>City</span>
@@ -793,6 +811,16 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
           Send on WhatsApp</button>
       </div>
       <p class="err" id="formerr" role="alert"></p>
+      <div class="paysafe" id="paysafe">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="10.5" width="16" height="11" rx="2.6"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+        <span>Secure payment by <b>Razorpay</b> &middot; UPI &middot; Cards &middot; Net banking</span>
+      </div>
+      <div class="testbanner" id="testbanner">
+        Test mode &mdash; no real money moves. Use UPI id <b>success@razorpay</b> or card
+        <b>4111 1111 1111 1111</b>, any future expiry, any CVV.
+      </div>
     </form>
 
     <p class="fineprint">Nothing is charged here &mdash; payment is sorted when the drop lands.<br>
@@ -825,7 +853,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     </details>
     <details class="qa">
       <summary><h3>How do I pre-order?</h3></summary>
-      <p>Add the scents you want on this page, fill in your name, WhatsApp number and delivery address, and press the button. Your whole order opens in WhatsApp already written — you just press send. Nothing is charged on this site; payment is arranged in the chat.</p>
+      <p>Add the scents you want on this page, fill in your name, mobile number, email and delivery address, and pay securely on the site &mdash; UPI, cards, net banking and wallets all work, handled by Razorpay. You get a confirmation email straight away and a WhatsApp message the moment your order ships. Prefer to talk first? Message us on WhatsApp and we will take the order there.</p>
     </details>
     <details class="qa">
       <summary><h3>Who makes Ynot?</h3></summary>
@@ -1070,6 +1098,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     var n=cartCount();
     total.innerHTML = '&#8377;' + (PRICE*n).toLocaleString('en-IN');
     countEl.textContent = n ? (n + (n>1?' bottles':' bottle')) : 'Nothing added yet';
+    if(typeof PAY !== 'undefined' && PAY.live && !btn.disabled) payLabel();
   }
   function refreshOrder(){ drawCart(); }               // called when the vibe changes
 
@@ -1089,6 +1118,120 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   }
   function flag(el,bad){ el.classList.toggle('bad',!!bad); }
 
+  /* ---- payments -------------------------------------------------
+     /api/config decides at runtime whether this is a shop or a waiting
+     list. No keys in the environment means live:false, and every line
+     below sits out of the way while the WhatsApp flow carries on. */
+  var PAY = { live:false, keyId:null, test:false };
+  var btn = $('#preorder'), emailFld = $('#fld-email'), emailIn = $('#f-email');
+  var btnWA = btn.innerHTML;
+  var BTN_PAY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    + ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<rect x="4" y="10.5" width="16" height="11" rx="2.6"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>';
+
+  function payLabel(){
+    var n = cartCount();
+    btn.innerHTML = BTN_PAY + 'Pay ' + (n ? '&#8377;' + (PRICE*n).toLocaleString('en-IN') : 'securely');
+  }
+  function busy(on, label){
+    btn.disabled = !!on;
+    if(on) btn.innerHTML = '<span class="spin"></span>' + (label || 'Working&hellip;');
+    else if(PAY.live) payLabel();
+    else btn.innerHTML = btnWA;
+  }
+
+  function goLive(cfg){
+    PAY.live = true; PAY.keyId = cfg.keyId; PAY.test = !!cfg.test;
+    btn.classList.remove('wa'); btn.classList.add('pay');
+    emailFld.hidden = false; emailIn.setAttribute('required','required');
+    $('#paysafe').classList.add('show');
+    if(PAY.test) $('#testbanner').classList.add('show');
+    $('.dintro').innerHTML = 'Not in shops yet &mdash; reserve yours now. Add as many bottles as you like, '
+      + 'tell us where they should reach you, and pay securely in a few taps. '
+      + 'We ship the moment the drop lands.';
+    $('#drop .fineprint').innerHTML = 'Free delivery across India &middot; all prices include tax.<br>'
+      + 'Questions before you pay? <a href="https://wa.me/' + WA + '">Message us on WhatsApp</a> '
+      + 'or write to <a href="mailto:' + TO + '">' + TO + '</a>.';
+    payLabel();
+    var sc = document.createElement('script');       // only loaded when there is something to pay for
+    sc.src = 'https://checkout.razorpay.com/v1/checkout.js'; sc.async = true;
+    document.head.appendChild(sc);
+  }
+
+  try{
+    fetch('/api/config', {cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(cfg){ if(cfg && cfg.live && cfg.keyId) goLive(cfg); })
+      .catch(function(){});                           // offline or not deployed yet: stay on WhatsApp
+  }catch(e){}
+
+  function cartPayload(){
+    var out = {};
+    VIBES.forEach(function(v,i){ if(CART[i]) out[v.id] = CART[i]; });
+    return out;
+  }
+
+  function post(url, body){
+    return fetch(url, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    }).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){
+        if(!r.ok) throw new Error(j.error || 'Something went wrong. Please try again.');
+        return j;
+      });
+    });
+  }
+
+  function startPayment(o){
+    if(!window.Razorpay){
+      err.textContent = 'Payment window is still loading &mdash; give it a second and tap again.';
+      busy(false); return;
+    }
+    busy(true, 'Opening payment&hellip;');
+    post('/api/create-order', { cart: cartPayload(), customer: o })
+      .then(function(od){
+        busy(false);
+        var rz = new Razorpay({
+          key: od.keyId,
+          amount: od.amount,
+          currency: od.currency,
+          name: 'Ynot',
+          description: od.count + (od.count>1 ? ' bottles' : ' bottle') + ' \u00B7 mist spray',
+          image: '/mark.webp',
+          order_id: od.orderId,
+          prefill: { name:o.name, email:o.email, contact:o.phone },
+          notes:   { address: o.addr + ', ' + o.city + ' ' + o.pin },
+          theme:   { color: VIBES[active].a1, backdrop_color: '#0B0410' },
+          modal:   { ondismiss: function(){ busy(false); err.textContent = 'Payment cancelled &mdash; nothing was charged.'; } },
+          handler: function(resp){ finish(resp, od); }
+        });
+        rz.on('payment.failed', function(ev){
+          busy(false);
+          var d = (ev && ev.error) || {};
+          err.textContent = (d.description || 'That payment did not go through') + '. Nothing was charged.';
+        });
+        rz.open();
+      })
+      .catch(function(e){ busy(false); err.textContent = e.message; });
+  }
+
+  function finish(resp, od){
+    busy(true, 'Confirming&hellip;');
+    post('/api/verify', resp)
+      .then(function(v){
+        try{ sessionStorage.setItem('ynot.order', JSON.stringify(v.summary)); }catch(e){}
+        location.href = '/thanks/?id=' + encodeURIComponent(v.summary.receipt);
+      })
+      .catch(function(e){
+        busy(false);
+        err.textContent = e.message;
+        $('#doneline').innerHTML = 'Your payment reference is <b>' + resp.razorpay_payment_id +
+          '</b>. Send it to us on WhatsApp and we will sort it out straight away.';
+        sentnote.classList.add('show');
+      });
+  }
+
   $('#orderform').addEventListener('submit', function(e){
     e.preventDefault();
     var nEl=$('#f-name'), pEl=$('#f-phone'), aEl=$('#f-addr'), cEl=$('#f-city'), zEl=$('#f-pin');
@@ -1107,12 +1250,18 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     need(aEl, o.addr.length>=6, 'your address');
     need(cEl, !!o.city, 'your city');
     need(zEl, pinOk, 'a 6-digit pincode');
+    if(PAY.live){
+      var eEl=$('#f-email'), em=eEl.value.trim();
+      need(eEl, /^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(em), 'your email for the receipt');
+      o.email = em;
+    }
     if(bad.length){
       err.textContent='Just need ' + bad.join(', ') + '.';
       if(first) first.focus();
       return;
     }
     err.textContent='';
+    if(PAY.live){ startPayment(o); return; }
     var msg=orderText(o);
     var url = /^\d{10,15}$/.test(WA)
       ? 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg)
