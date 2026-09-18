@@ -137,12 +137,23 @@ module.exports = async function handler(req, res){
     '<p style="margin:2px 0 0;color:#9A93A0;font-size:13px">Ynot &middot; getynot.in</p>' +
     '</div>';
 
+  /* Gauri gets a WhatsApp too - same five facts she needs to pack the order.
+     Sent alongside the emails; none of these can fail the order. */
+  const waFields = [
+    summary.receipt,
+    summary.items,
+    amt.toLocaleString('en-IN'),
+    [c.name, c.addr, c.city, c.pin].filter(Boolean).join(', '),
+    '+' + c.phone
+  ];
+
   const mail = await Promise.all([
+    L.notifyOwner(waFields),
     L.sendMail(L.MAIL_TO, 'Order ' + summary.receipt + ' - ' + summary.items, adminText, adminHtml),
     c.email ? L.sendMail(c.email, 'Your Ynot order is confirmed (' + summary.receipt + ')', buyerText, buyerHtml)
             : Promise.resolve({ skipped: 'no_email' })
   ]);
-  console.log('order', summary.receipt, 'mail', JSON.stringify(mail));
+  console.log('order', summary.receipt, 'notify', JSON.stringify(mail));
 
   return L.json(res, 200, { ok: true, summary: summary, wa: L.BRAND_WA });
 };

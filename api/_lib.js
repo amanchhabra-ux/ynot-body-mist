@@ -129,7 +129,54 @@ async function sendMail(to, subject, text, html){
   }
 }
 
+/* ---- WhatsApp to the owner -------------------------------------
+   Meta's Cloud API, called directly. Business-initiated messages must use a
+   template approved in advance, so the wording lives in Meta's dashboard and
+   we only supply the five values. Silent no-op until a token is configured,
+   and a failure here must never break a confirmed order. */
+const WA_TOKEN    = process.env.WHATSAPP_TOKEN     || '';
+const WA_PHONE_ID = process.env.WHATSAPP_PHONE_ID  || '';
+const WA_TO       = process.env.OWNER_WHATSAPP     || '';
+const WA_TEMPLATE = process.env.WHATSAPP_TEMPLATE  || 'new_order';
+const WA_LANG     = process.env.WHATSAPP_LANG      || 'en';
+const WA_READY    = !!(WA_TOKEN && WA_PHONE_ID && WA_TO);
+
+/* Template parameters may not contain newlines, tabs or runs of spaces. */
+function oneLine(v){
+  return String(v == null ? '' : v).replace(/\s+/g, ' ').trim().slice(0, 900) || '-';
+}
+
+async function notifyOwner(fields){
+  if (!WA_READY) return { skipped: 'no_whatsapp_token' };
+  try {
+    const r = await fetch('https://graph.facebook.com/v21.0/' + WA_PHONE_ID + '/messages', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + WA_TOKEN, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to: WA_TO,
+        type: 'template',
+        template: {
+          name: WA_TEMPLATE,
+          language: { code: WA_LANG },
+          components: [{
+            type: 'body',
+            parameters: fields.map(function(v){ return { type: 'text', text: oneLine(v) }; })
+          }]
+        }
+      })
+    });
+    const body = await r.text();
+    if (!r.ok) { console.error('whatsapp send failed', r.status, body); return { ok: false, status: r.status }; }
+    return { ok: true };
+  } catch (e) {
+    console.error('whatsapp send threw', e && e.message);
+    return { ok: false, error: String(e && e.message) };
+  }
+}
+
 module.exports = {
   PRICE, CATALOG, LIVE, TEST_MODE, KEY_ID, KEY_SECRET, MAIL_TO, BRAND_WA,
-  json, readBody, rzp, priceCart, cleanCustomer, itemLine, receiptNo, sendMail
+  json, readBody, rzp, priceCart, cleanCustomer, itemLine, receiptNo, sendMail,
+  notifyOwner, WA_READY
 };
