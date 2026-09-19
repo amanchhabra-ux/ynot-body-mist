@@ -149,8 +149,11 @@ module.exports = async function handler(req, res){
 
   const mail = await Promise.all([
     L.notifyOwner(waFields),
-    L.sendMail(L.MAIL_TO, 'Order ' + summary.receipt + ' - ' + summary.items, adminText, adminHtml),
-    c.email ? L.sendMail(c.email, 'Your Ynot order is confirmed (' + summary.receipt + ')', buyerText, buyerHtml)
+    // Gauri's copy replies to the buyer; the buyer's copy replies to Gauri.
+    L.sendMail(L.MAIL_TO, 'Order ' + summary.receipt + ' - ' + summary.items,
+               adminText, adminHtml, c.email || undefined),
+    c.email ? L.sendMail(c.email, 'Your Ynot order is confirmed (' + summary.receipt + ')',
+                         buyerText, buyerHtml)
             : Promise.resolve({ skipped: 'no_email' })
   ]);
   console.log('order', summary.receipt, 'notify', JSON.stringify(mail));

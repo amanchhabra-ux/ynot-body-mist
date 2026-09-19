@@ -20,6 +20,7 @@ const TEST_MODE  = KEY_ID.indexOf('rzp_test') === 0;
 const MAIL_KEY   = process.env.RESEND_API_KEY || '';
 const MAIL_FROM  = process.env.ORDER_EMAIL_FROM || 'Ynot <onboarding@resend.dev>';
 const MAIL_TO    = process.env.ORDER_EMAIL_TO   || 'gaurichhabra272012@gmail.com';
+const MAIL_REPLY_TO = process.env.ORDER_EMAIL_REPLY_TO || MAIL_TO;
 const BRAND_WA   = process.env.BRAND_WHATSAPP   || '919810868316';
 
 function json(res, code, body){
@@ -115,15 +116,25 @@ function receiptNo(){
          '-' + Math.floor(Math.random() * 900 + 100);
 }
 
-async function sendMail(to, subject, text, html){
+async function sendMail(to, subject, text, html, replyTo){
   if (!MAIL_KEY) return { skipped: 'no_mail_key' };
+  const payload = { from: MAIL_FROM, to: [to], subject: subject, text: text, html: html };
+  /* The from-address is a sending identity, not necessarily a mailbox, so
+     every message points Reply somewhere a person actually reads. */
+  const rt = replyTo || MAIL_REPLY_TO;
+  if (rt) payload.reply_to = rt;
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + MAIL_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: MAIL_FROM, to: [to], subject: subject, text: text, html: html })
+      body: JSON.stringify(payload)
     });
-    return { ok: r.ok, status: r.status };
+    if (!r.ok) {
+      const body = await r.text();
+      console.error('resend rejected', r.status, body);   // e.g. unverified domain
+      return { ok: false, status: r.status, body: body.slice(0, 300) };
+    }
+    return { ok: true };
   } catch (e) {
     return { ok: false, error: String(e && e.message) };
   }
