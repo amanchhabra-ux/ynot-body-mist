@@ -89,7 +89,7 @@ module.exports = async function handler(req, res){
 
   const m = report.mail, problems = [];
   if (!m.key_set) problems.push('RESEND_API_KEY is not set');
-  if (m.to.issue) problems.push('ORDER_EMAIL_TO ' + m.to.issue + ' - Gauri\'s order email cannot be delivered');
+  if (m.to.issue) problems.push('ORDER_EMAIL_TO ' + m.to.issue + ' - ignored; order emails are going to the built-in address ' + L.MAIL_TO + ' until it is fixed');
   if (m.from.issue) problems.push('ORDER_EMAIL_FROM: ' + m.from.issue);
   if (m.resend && m.resend.from_domain_status && m.resend.from_domain_status !== 'verified')
     problems.push('Resend says ' + m.from.domain + ' is "' + m.resend.from_domain_status + '", not verified');

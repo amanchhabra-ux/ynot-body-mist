@@ -20,8 +20,14 @@ const TEST_MODE  = KEY_ID.indexOf('rzp_test') === 0;
 const MAIL_KEY   = process.env.RESEND_API_KEY || '';
 const RESEND_BASE = process.env.RESEND_API_BASE || 'https://api.resend.com';
 const MAIL_FROM  = process.env.ORDER_EMAIL_FROM || 'Ynot <onboarding@resend.dev>';
-const MAIL_TO    = process.env.ORDER_EMAIL_TO   || 'gaurichhabra272012@gmail.com';
-const MAIL_REPLY_TO = process.env.ORDER_EMAIL_REPLY_TO || MAIL_TO;
+const OWNER_DEFAULT = 'gaurichhabra272012@gmail.com';
+/* Only trust an env value that is actually shaped like one address. */
+function asEmail(v){
+  const t = String(v == null ? '' : v).trim().replace(/^["']|["']$/g, '');
+  return /^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(t) ? t : '';
+}
+const MAIL_TO    = asEmail(process.env.ORDER_EMAIL_TO) || OWNER_DEFAULT;
+const MAIL_REPLY_TO = asEmail(process.env.ORDER_EMAIL_REPLY_TO) || MAIL_TO;
 const BRAND_WA   = process.env.BRAND_WHATSAPP   || '919810868316';
 
 function json(res, code, body){
