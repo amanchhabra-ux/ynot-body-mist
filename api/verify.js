@@ -158,5 +158,33 @@ module.exports = async function handler(req, res){
   ]);
   console.log('order', summary.receipt, 'notify', JSON.stringify(mail));
 
+  /* Record the outcome on the order in Razorpay. Best effort: a failure here
+     is logged and ignored, never allowed to spoil a confirmed payment. */
+  const word = function(r){
+    if (!r) return 'unknown';
+    if (r.ok) return 'sent';
+    if (r.skipped) return 'not configured (' + r.skipped + ')';
+    let why = 'FAILED';
+    if (r.status) why += ' http ' + r.status;
+    if (r.body) {
+      try { const b = JSON.parse(r.body); why += ': ' + (b.message || b.name || ''); }
+      catch (e) { why += ': ' + String(r.body).slice(0, 120); }
+    }
+    if (r.error) why += ': ' + r.error;
+    return why.slice(0, 250);
+  };
+  try {
+    await L.rzp('/orders/' + encodeURIComponent(oid), {
+      method: 'PATCH',
+      body: JSON.stringify({ notes: Object.assign({}, n, {
+        whatsapp:   word(mail[0]),
+        mail_gauri: word(mail[1]),
+        mail_buyer: word(mail[2])
+      }) })
+    });
+  } catch (e) {
+    console.error('could not stamp notes on', oid, e.status, e.payload);
+  }
+
   return L.json(res, 200, { ok: true, summary: summary, wa: L.BRAND_WA });
 };

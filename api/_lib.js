@@ -18,6 +18,7 @@ const LIVE       = !!(KEY_ID && KEY_SECRET);
 const TEST_MODE  = KEY_ID.indexOf('rzp_test') === 0;
 
 const MAIL_KEY   = process.env.RESEND_API_KEY || '';
+const RESEND_BASE = process.env.RESEND_API_BASE || 'https://api.resend.com';
 const MAIL_FROM  = process.env.ORDER_EMAIL_FROM || 'Ynot <onboarding@resend.dev>';
 const MAIL_TO    = process.env.ORDER_EMAIL_TO   || 'gaurichhabra272012@gmail.com';
 const MAIL_REPLY_TO = process.env.ORDER_EMAIL_REPLY_TO || MAIL_TO;
@@ -124,7 +125,7 @@ async function sendMail(to, subject, text, html, replyTo){
   const rt = replyTo || MAIL_REPLY_TO;
   if (rt) payload.reply_to = rt;
   try {
-    const r = await fetch('https://api.resend.com/emails', {
+    const r = await fetch(RESEND_BASE + '/emails', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + MAIL_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
