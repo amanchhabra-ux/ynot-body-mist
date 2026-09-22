@@ -23,14 +23,29 @@ function parseFrom(raw){
   return out;
 }
 
+function describeTo(raw){
+  const s = String(raw == null ? '' : raw);
+  const t = s.trim();
+  const out = { set: !!t, looks_valid: false, masked: null, length: s.length, issue: null };
+  if (!t) { out.issue = 'ORDER_EMAIL_TO is empty'; return out; }
+  const at = t.indexOf('@');
+  out.masked = at > 0 ? t.slice(0, 2) + '***' + t.slice(at) : t.slice(0, 3) + '*** (' + t.length + ' chars, no @)';
+  if (s !== t)                     out.issue = 'has spaces or a line break before/after it';
+  if (/^["']|["']$/.test(t))       out.issue = 'is wrapped in quote marks';
+  else if (at < 0)                 out.issue = 'has no @ - it is not an email address';
+  else if (/\s/.test(t))           out.issue = 'contains a space';
+  else if (!/^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(t)) out.issue = 'is not a well-formed email address';
+  out.looks_valid = !out.issue;
+  return out;
+}
+
 module.exports = async function handler(req, res){
   const report = {
     checked_at: new Date().toISOString(),
     razorpay_live: L.LIVE,
     mail: {
       key_set: !!process.env.RESEND_API_KEY,
-      to_set: !!process.env.ORDER_EMAIL_TO,
-      to_domain: String(process.env.ORDER_EMAIL_TO || L.MAIL_TO).split('@')[1] || null,
+      to: describeTo(process.env.ORDER_EMAIL_TO),
       from: parseFrom(process.env.ORDER_EMAIL_FROM),
       resend: null
     }
@@ -53,6 +68,12 @@ module.exports = async function handler(req, res){
           domains: list,
           from_domain_status: hit ? hit.status : (want ? 'not added to Resend' : null)
         };
+      } else if (body && body.name === 'restricted_api_key') {
+        report.mail.resend = {
+          key_accepted: true,
+          sending_only: true,
+          note: 'sending-only key: valid for sending, just not allowed to list domains - check verification in the Resend dashboard'
+        };
       } else {
         report.mail.resend = {
           key_accepted: r.status !== 401 && r.status !== 403 ? null : false,
@@ -68,6 +89,7 @@ module.exports = async function handler(req, res){
 
   const m = report.mail, problems = [];
   if (!m.key_set) problems.push('RESEND_API_KEY is not set');
+  if (m.to.issue) problems.push('ORDER_EMAIL_TO ' + m.to.issue + ' - Gauri\'s order email cannot be delivered');
   if (m.from.issue) problems.push('ORDER_EMAIL_FROM: ' + m.from.issue);
   if (m.resend && m.resend.from_domain_status && m.resend.from_domain_status !== 'verified')
     problems.push('Resend says ' + m.from.domain + ' is "' + m.resend.from_domain_status + '", not verified');
