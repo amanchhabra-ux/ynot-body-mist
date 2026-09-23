@@ -19,8 +19,8 @@ const TEST_MODE  = KEY_ID.indexOf('rzp_test') === 0;
 
 const MAIL_KEY   = process.env.RESEND_API_KEY || '';
 const RESEND_BASE = process.env.RESEND_API_BASE || 'https://api.resend.com';
-const MAIL_FROM  = process.env.ORDER_EMAIL_FROM || 'Ynot <onboarding@resend.dev>';
-const OWNER_DEFAULT = 'gaurichhabra272012@gmail.com';
+const MAIL_FROM  = process.env.ORDER_EMAIL_FROM || 'Ynot <orders@getynot.in>';
+const OWNER_DEFAULT = 'orders@getynot.in';
 /* Only trust an env value that is actually shaped like one address. */
 function asEmail(v){
   const t = String(v == null ? '' : v).trim().replace(/^["']|["']$/g, '');
