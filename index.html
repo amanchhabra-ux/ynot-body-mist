@@ -40,6 +40,7 @@
    "image": "https://www.getynot.in/og-image.jpg",
    "description": "Ynot is an Indian mist spray brand with four scents for girls and boys, founded by a Class 9 student.",
    "slogan": "Be you. Own it.",
+   "sameAs": ["https://www.instagram.com/getynot"],
    "foundingDate": "2026",
    "areaServed": {
     "@type": "Country",
@@ -697,6 +698,18 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   html{scroll-behavior:auto}
   #mist{display:none}
 }
+.igband{padding-top:56px;padding-bottom:56px;text-align:center}
+.igband h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;text-transform:uppercase;margin:.3em 0;font-size:clamp(28px,5vw,44px);letter-spacing:-.01em}
+.igkick{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);display:inline-flex;align-items:center;gap:8px}
+.igdot{width:8px;height:8px;border-radius:50%;background:var(--a1);box-shadow:0 0 10px var(--a1)}
+.igcopy{max-width:36ch;margin:0 auto 1.4em;color:var(--mute)}
+.igbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.igbtns a{display:inline-block;padding:14px 26px;border-radius:999px;text-decoration:none;font-weight:600}
+.igpri{background:var(--chalk);color:#0B0410}
+.igsec{border:1px solid currentColor;color:var(--chalk)}
+.dmline{margin-top:6px;font-family:var(--mono);font-size:11px;color:#7E6784;letter-spacing:.06em}
+.dmline a{color:var(--a2);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--a2) 45%,transparent)}
+@media (max-width:560px){.bar a.barlink.ig{display:none}.igbtns a{width:100%;text-align:center}}
 </style>
 
 <div id="field" aria-hidden="true">
@@ -712,6 +725,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
   <span class="spec">100 ml &middot; 3.38 fl.oz</span>
   <span class="mrp">MRP <b>&#8377;599</b></span>
   <a class="barlink" href="/founder/">Founder</a>
+  <a class="barlink ig" href="https://www.instagram.com/getynot" target="_blank" rel="noopener">Instagram</a>
   <a class="mini" href="#drop">Shop</a>
 </header>
 
@@ -833,6 +847,7 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
     <p class="fineprint">In stock &middot; dispatched within 1&ndash;3 working days &middot; free delivery across India.<br>
       No WhatsApp? Write to <a href="mailto:hello@getynot.in">hello@getynot.in</a>
       <button class="copy" id="copyb" type="button">Copy address</button> <span id="copied" aria-live="polite"></span></p>
+    <p class="dmline">Prefer Instagram? <a href="https://ig.me/m/getynot" target="_blank" rel="noopener">Order through DM</a></p>
 
     <div class="sent-note" id="sentnote">
       <h3>WhatsApp open?</h3>
@@ -871,12 +886,22 @@ footer{position:relative;z-index:2;border-top:var(--edge);margin-top:40px;paddin
 
 </main>
 
+<section class="igband wrap" id="instagram">
+  <p class="igkick"><span class="igdot"></span>We&rsquo;re now on Instagram</p>
+  <h2>Follow @getynot</h2>
+  <p class="igcopy">Say hi, see the drops first, and order by DM if you&rsquo;d rather chat than check out.</p>
+  <div class="igbtns">
+    <a class="igpri" href="https://ig.me/m/getynot" target="_blank" rel="noopener">Order through DM</a>
+    <a class="igsec" href="https://www.instagram.com/getynot" target="_blank" rel="noopener">Visit our page</a>
+  </div>
+</section>
+
 <footer class="wrap">
   <p class="bigfoot">Shake it. <span class="o">Spray it.</span> <span class="g">Slay on it.</span></p>
   <div class="foot">
     <span>Ynot Mist Spray</span><span>&#8377;599 &middot; 100 ml</span>
     <span class="sp"></span>
-    <span>Orders &middot; orders@getynot.in</span>
+    <span>Orders &middot; orders@getynot.in</span><span><a href="https://www.instagram.com/getynot" target="_blank" rel="noopener" style="color:inherit">@getynot on Instagram</a></span>
   </div>
   <p class="qlh">Quick links</p>
   <nav class="legal" aria-label="Quick links">
