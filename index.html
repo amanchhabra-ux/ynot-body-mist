@@ -286,6 +286,29 @@
 </script>
 <style>html,body{margin:0;padding:0}img{max-width:100%}
 .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}</style>
+<!-- SEASONAL LOOK (Diwali) — the files live in /festive/.
+     MODE: 'on' = everyone sees it · 'preview' = only visitors who open the site with ?diwali=1 (?diwali=0 turns it off again) · 'off' = nobody.
+     END: it switches itself off from this date (IST), whatever MODE says. -->
+<script>
+(function(){
+  var MODE='preview', END='2026-11-13';
+  var q=location.search, on=false;
+  if(MODE!=='off' && new Date() < new Date(END+'T00:00:00+05:30')){
+    if(MODE==='on') on=true;
+    else {
+      try{
+        if(/[?&]diwali=1(&|$)/.test(q)) localStorage.setItem('ynot-diwali','1');
+        if(/[?&]diwali=0(&|$)/.test(q)) localStorage.removeItem('ynot-diwali');
+        on = localStorage.getItem('ynot-diwali')==='1';
+      }catch(e){ on=/[?&]diwali=1(&|$)/.test(q); }
+    }
+  }
+  if(!on) return;
+  var d=document; d.documentElement.classList.add('diwali');
+  var l=d.createElement('link'); l.rel='stylesheet'; l.href='festive/diwali.css'; d.head.appendChild(l);
+  var s=d.createElement('script'); s.src='festive/diwali.js'; d.head.appendChild(s);
+})();
+</script>
 </head>
 <body>
 <style>
