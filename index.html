@@ -291,7 +291,7 @@
      END: it switches itself off from this date (IST), whatever MODE says. -->
 <script>
 (function(){
-  var MODE='preview', END='2026-11-13';
+  var MODE='on', END='2026-11-13';
   var q=location.search, on=false;
   if(MODE!=='off' && new Date() < new Date(END+'T00:00:00+05:30')){
     if(MODE==='on') on=true;
